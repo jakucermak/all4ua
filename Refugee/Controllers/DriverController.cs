@@ -39,7 +39,7 @@ public class DriverController: Controller
             var driverViewModel = new DriverViewModel
             {
                 FirstName = driver.FirstName,
-                LastName = driver.LastName,
+                LastName = driver.LastName ,
                 Email = driver.Email,
                 PhoneNumber = driver.PhoneNumber,
                 AdultsAmount = driver.AdultsAmount,

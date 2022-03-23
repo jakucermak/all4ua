@@ -16,5 +16,5 @@ public class Location
     [ForeignKey("driver_id")]
     [Column("driver_id")]
     public int DriverId { get; set; }
-    public Driver Driver { get; }
+    public Driver Driver { get; } = default!;
 }
