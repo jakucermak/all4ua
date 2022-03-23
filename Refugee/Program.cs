@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string connectionString = String.Empty;
-
+Console.WriteLine(builder.Environment.EnvironmentName);
 if (builder.Environment.EnvironmentName == "Development")
 {
     connectionString = builder.Configuration.GetConnectionString("all4ua");
