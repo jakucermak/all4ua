@@ -23,6 +23,8 @@ jobs:
           working_directory: ~/project/App.Tests
           name: Run tests
           command: |
+            ls .. 
+            ls 
             dotnet test
 
 # Invoke jobs via workflows
