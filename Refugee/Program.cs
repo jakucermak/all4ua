@@ -27,20 +27,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     o => o.UseNpgsql(connectionString)
 );
 
-var serviceProvider = builder.Services.BuildServiceProvider();
-try
-{
-    var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
-}
-catch (Exception e)
-{
-    Console.WriteLine(connectionString);
-    Console.WriteLine(e);
-    throw;
-}
-
-
 var app = builder.Build();
 app.MapGet("/", () => "Hello World!");
 
