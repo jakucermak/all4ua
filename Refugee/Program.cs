@@ -12,8 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connectionString = String.Empty;
-Console.WriteLine(builder.Environment.EnvironmentName);
+string connectionString;
 if (builder.Environment.EnvironmentName == "Development")
 {
     connectionString = builder.Configuration.GetConnectionString("all4ua");
@@ -36,6 +35,7 @@ try
 }
 catch (Exception e)
 {
+    Console.WriteLine(connectionString);
     Console.WriteLine(e);
     throw;
 }
