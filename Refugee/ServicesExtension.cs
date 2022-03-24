@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Refugee.Database;
 using Refugee.Services;
 
@@ -9,12 +10,11 @@ public static class ServicesExtension
     {
         collection.AddTransient<DriverService>();
         collection.AddTransient<LocationService>();
-//        collection.AddTransient<ApplicationDbContext>();
     }
 
     public static string GetHerokuConnectionString()
     {
-        string? connectionUrl = Environment.GetEnvironmentVariable("DATASE_URL");
+        string? connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 
         if (connectionUrl is not null)
         {
