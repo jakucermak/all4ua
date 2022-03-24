@@ -28,7 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 );
 
 var app = builder.Build();
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => connectionString);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
