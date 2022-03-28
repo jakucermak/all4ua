@@ -1,6 +1,5 @@
 using Refugee.Database;
 using Refugee.Models.Entities;
-using Refugee.ViewModels;
 
 namespace Refugee.Services;
 

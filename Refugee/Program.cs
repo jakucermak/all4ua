@@ -22,10 +22,11 @@ else
     connectionString = ServicesExtension.GetHerokuConnectionString();
 }
 
-
 builder.Services.AddDbContext<ApplicationDbContext>(
     o => o.UseNpgsql(connectionString)
 );
+
+
 
 var app = builder.Build();
 app.MapGet("/", () => connectionString);

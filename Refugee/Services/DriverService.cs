@@ -1,10 +1,9 @@
 using Refugee.Database;
 using Refugee.Models.Entities;
-using Refugee.ViewModels;
 
 namespace Refugee.Services;
 
-public class DriverService
+public class DriverService: IDriverService
 {
     private ApplicationDbContext Context { get; set; }
     private LocationService LocationService { get; set; }
@@ -15,32 +14,31 @@ public class DriverService
         LocationService = locationService;
     }
 
-    public void CreateDriver(DriverViewModel driverViewModel)
+    public void CreateDriver(Driver driver)
     {
         var uuid = Guid.NewGuid();
         Context.Drivers.Add(
             new Driver
             {
                 Uuid = uuid,
-                FirstName = driverViewModel.FirstName,
-                LastName = driverViewModel.LastName,
-                Email = driverViewModel.Email,
-                PhoneNumber = driverViewModel.PhoneNumber,
-                AdultsAmount = driverViewModel.AdultsAmount,
-                KidsAmount = driverViewModel.KidsAmount,
-                PickupDestination = driverViewModel.PickupDestination,
-                FinalDestination = driverViewModel.FinalDestination,
+                FirstName = driver.FirstName,
+                LastName = driver.LastName,
+                Email = driver.Email,
+                PhoneNumber = driver.PhoneNumber,
+                AdultsAmount = driver.AdultsAmount,
+                KidsAmount = driver.KidsAmount,
+                PickupDestination = driver.PickupDestination,
+                FinalDestination = driver.FinalDestination,
                 DateCreated = DateTimeOffset.Now.ToUnixTimeSeconds(),
-                Provide = driverViewModel.Provide,
+                Provide = driver.Provide
             }
             );
         Context.SaveChanges();
 
-        Driver driver = Context.Drivers.Single(d => d.Uuid == uuid);
+        Driver driverEntity = Context.Drivers.Single(d => d.Uuid == uuid);
 
-        LocationService.CreateLocation(driver,driverViewModel.Location.Latitude,
-            driverViewModel.Location.Longitude);
-        
+        LocationService.CreateLocation(driverEntity,driver.Location.Latitude,
+            driver.Location.Longitude);
     }
 
     public Driver[] GetAllDrivers()
@@ -64,45 +62,5 @@ public class DriverService
             return true;
         }
         return false;
-    }
-    
-    public List<DriverViewModel> DriverViewModels()
-    {
-        var driverViewModels = new List<DriverViewModel>();
-
-        foreach (var driver in GetAllDrivers())
-        {
-            var locationViewModel = new LocationViewModel();
-            var location = LocationService.GetLocationById(driver.Id);
-
-            if (location is not null)
-            {
-                locationViewModel = new LocationViewModel
-                {
-                    Longitude = location.Longitude,
-                    Latitude = location.Latitude
-                };
-            }
-
-            DriverViewModel driverViewModel = new DriverViewModel
-            {
-                Uuid = driver.Uuid,
-                FirstName = driver.FirstName,
-                LastName = driver.LastName,
-                Email = driver.Email,
-                PhoneNumber = driver.PhoneNumber,
-                AdultsAmount = driver.AdultsAmount,
-                KidsAmount = driver.KidsAmount,
-                PickupDestination = driver.PickupDestination,
-                FinalDestination = driver.FinalDestination,
-                DateCreated = driver.DateCreated,
-                Provide = driver.Provide,
-                Location = locationViewModel
-            };
-
-            driverViewModels.Add(driverViewModel);
-        }
-
-        return driverViewModels;
     }
 }

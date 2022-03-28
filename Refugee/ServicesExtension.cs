@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Refugee.Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Refugee.Services;
 
 namespace Refugee;
@@ -8,7 +8,8 @@ public static class ServicesExtension
 {
     public static void RegisterServices(this IServiceCollection collection)
     {
-        collection.AddTransient<DriverService>();
+        collection.AddScoped<IDriverService, DriverService>();
+        collection.AddTransient<DriverModelValidation>();
         collection.AddTransient<LocationService>();
     }
 

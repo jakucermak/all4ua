@@ -1,55 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
 using Refugee.Models.Entities;
 using Refugee.Services;
-using Refugee.ViewModels;
 
 namespace Refugee.Controllers;
 
 [Route("{controller}")]
-public class DriverController: Controller
+public class DriverController: ControllerBase
 {
-    private DriverService DriverService { get; }
+    private readonly IDriverService _driverService;
+    private DriverModelValidation _modelValidation;
 
-    public DriverController(DriverService driverService)
+
+    public DriverController( IDriverService driverService1, DriverModelValidation modelValidation)
     {
-        DriverService = driverService;
+        _driverService = driverService1;
+        _modelValidation = modelValidation;
     }
 
     [HttpPost]
-    public IActionResult CreateDriver([FromBody] DriverViewModel driver)
+    public IActionResult CreateDriver([FromBody] Driver driver)
     {
-        try
+        if (!_modelValidation.IsModelValid(driver))
         {
-            DriverService.CreateDriver(driver);
+            var modelError = _modelValidation.ModelError(ModelState);
+
+            return BadRequest(modelError);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return BadRequest();
-        }
-        return Ok(new { message = "ok" });
+        return Ok(new { message = "ok", driver });
     }
 
     [HttpGet("{uuid}")]
     public IActionResult GetByDriverId(Guid uuid)
     {
-        Driver? driver = DriverService.GetDriverByUuid(uuid) ;
+        Driver? driver = _driverService.GetDriverByUuid(uuid) ;
         if (driver is not null)
         {
-            var driverViewModel = new DriverViewModel
-            {
-                FirstName = driver.FirstName,
-                LastName = driver.LastName ,
-                Email = driver.Email,
-                PhoneNumber = driver.PhoneNumber,
-                AdultsAmount = driver.AdultsAmount,
-                KidsAmount = driver.KidsAmount,
-                PickupDestination = driver.PickupDestination,
-                FinalDestination = driver.FinalDestination,
-                DateCreated = driver.DateCreated,
-                Provide = driver.Provide,
-            };
-            return Ok(driverViewModel);
+            return Ok(driver);
         }
         return NotFound();
     }
@@ -59,7 +45,7 @@ public class DriverController: Controller
     {
         try
         {
-          DriverService.RemoveDriverByUuid(uuid);  
+          _driverService.RemoveDriverByUuid(uuid);  
         }
         catch (Exception e)
         {

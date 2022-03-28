@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
+using Refugee.Models.Entities;
 using Refugee.Services;
-using Refugee.ViewModels;
 
 namespace Refugee.Controllers;
 [Route("{controller}")]
 public class DriversController : Controller
 {
-    private DriverService DriverService { get; }
+    private readonly IDriverService _driverService;
     private LocationService LocationService { get; }
 
-    public DriversController(DriverService driverService, LocationService locationService)
+    public DriversController(IDriverService driverService, LocationService locationService)
     {
-        DriverService = driverService;
+        _driverService = driverService;
         LocationService = locationService;
     }
     
@@ -19,14 +19,14 @@ public class DriversController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        
-        var driverViewModels = DriverService.DriverViewModels();
+
+        Driver[] drivers = _driverService.GetAllDrivers();
 
         var response = new
         {
             status = "ok",
-            count = driverViewModels.Count,
-            drivers = driverViewModels
+            count = drivers.Length,
+            drivers = drivers
         };
         return Ok(response);
     }
